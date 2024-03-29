@@ -6,11 +6,11 @@ namespace Booking.Client.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RoomController : ControllerBase
+    public class RoomsController : ControllerBase
     {
         private readonly IRoomService _roomService;
 
-        public RoomController(IRoomService roomService)
+        public RoomsController(IRoomService roomService)
         {
             _roomService = roomService;
         }
@@ -22,7 +22,7 @@ namespace Booking.Client.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(string id)
         {
             var room = await _roomService.GetRoomByIdAsync(id);
             if (room == null)
@@ -51,7 +51,7 @@ namespace Booking.Client.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(string id)
         {
             var deletedRoom = await _roomService.DeleteRoomAsync(id);
             if (deletedRoom == null)

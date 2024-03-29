@@ -9,6 +9,7 @@ namespace Booking.Client
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IMeetingService, MeetingService>();
             return services;
         }
 

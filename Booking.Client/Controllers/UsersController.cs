@@ -8,11 +8,11 @@ namespace Booking.Client.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
@@ -25,7 +25,7 @@ namespace Booking.Client.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
@@ -54,7 +54,7 @@ namespace Booking.Client.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(string id)
         {
             var deletedUser = await _userService.DeleteUserAsync(id);
             if (deletedUser == null)

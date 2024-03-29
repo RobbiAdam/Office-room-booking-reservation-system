@@ -18,15 +18,6 @@ namespace Booking.Client.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Meeting>()
-                .HasOne(m => m.Room)
-                .WithMany(r => r.Meetings)
-                .HasForeignKey(m => m.RoomId);
-
-            modelBuilder.Entity<Meeting>()
-                .HasOne(m => m.User)
-                .WithMany(u => u.Meetings)
-                .HasForeignKey(m => m.UserId);
         }
 
     }

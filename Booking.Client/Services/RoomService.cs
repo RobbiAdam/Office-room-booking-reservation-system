@@ -20,7 +20,7 @@ namespace Booking.Client.Services
             return room;
         }
 
-        public async Task<Room> DeleteRoomAsync(Guid id)
+        public async Task<Room> DeleteRoomAsync(string id)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room != null)
@@ -36,7 +36,7 @@ namespace Booking.Client.Services
             return await _context.Rooms.ToListAsync();
         }
 
-        public async Task<Room> GetRoomByIdAsync(Guid id)
+        public async Task<Room> GetRoomByIdAsync(string id)
         {
             return await _context.Rooms.FindAsync(id);
         }

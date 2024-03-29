@@ -20,7 +20,7 @@ namespace Booking.Client.Services
             return user;
         }
 
-        public async Task<User> DeleteUserAsync(Guid id)
+        public async Task<User> DeleteUserAsync(string id)
         {
            var user = await _context.Users.FindAsync(id);
             if (user != null)
@@ -36,7 +36,7 @@ namespace Booking.Client.Services
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetUserByIdAsync(Guid id)
+        public async Task<User> GetUserByIdAsync(string id)
         {
             return await _context.Users.FindAsync(id);
         }

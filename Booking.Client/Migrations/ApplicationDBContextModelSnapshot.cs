@@ -24,15 +24,15 @@ namespace Booking.Client.Migrations
 
             modelBuilder.Entity("Booking.Client.Data.Models.Meeting", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("RoomId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -41,8 +41,9 @@ namespace Booking.Client.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -55,9 +56,8 @@ namespace Booking.Client.Migrations
 
             modelBuilder.Entity("Booking.Client.Data.Models.Room", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
@@ -77,9 +77,8 @@ namespace Booking.Client.Migrations
 
             modelBuilder.Entity("Booking.Client.Data.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -100,21 +99,17 @@ namespace Booking.Client.Migrations
 
             modelBuilder.Entity("Booking.Client.Data.Models.Meeting", b =>
                 {
-                    b.HasOne("Booking.Client.Data.Models.Room", "Room")
+                    b.HasOne("Booking.Client.Data.Models.Room", null)
                         .WithMany("Meetings")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Client.Data.Models.User", "User")
+                    b.HasOne("Booking.Client.Data.Models.User", null)
                         .WithMany("Meetings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Room");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Booking.Client.Data.Models.Room", b =>
