@@ -1,4 +1,7 @@
+using Booking.Client;
 using Booking.Client.Data;
+using Booking.Client.Services;
+using Booking.Client.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +13,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookingDbConnection"));
 });
+
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

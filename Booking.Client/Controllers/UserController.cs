@@ -1,5 +1,6 @@
 ﻿using Booking.Client.Data;
 using Booking.Client.Data.Models;
+using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,57 +10,58 @@ namespace Booking.Client.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly IUserService _userService;
 
-        public UserController(ApplicationDBContext context)
+        public UserController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _context.Users.ToListAsync());
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
-                return BadRequest("User not found.");
+            {
+                return NotFound();
+            }
             return Ok(user);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddUser(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Users.ToListAsync());
+            var newUser = await _userService.AddUserAsync(user);
+            return Ok(newUser);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser(User user)
         {
-            var existingUser = await _context.Users.FindAsync(user.Id);
-            if (existingUser == null)
-                return BadRequest("User not found.");
-            existingUser.Username = user.Username;
-            existingUser.FullName = user.FullName;
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Users.ToListAsync());
+            var updatedUser = await _userService.UpdateUserAsync(user);
+            if (updatedUser == null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedUser);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-                return BadRequest("User not found.");
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Users.ToListAsync());
+            var deletedUser = await _userService.DeleteUserAsync(id);
+            if (deletedUser == null)
+            {
+                return NotFound();
+            }
+            return Ok(deletedUser);
         }
 
     }

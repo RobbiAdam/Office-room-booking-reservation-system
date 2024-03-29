@@ -32,19 +32,13 @@ namespace Booking.Client.Services
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
-        {
-            var users = await _context.Users.ToListAsync();
-            return users;
+        {            
+            return await _context.Users.ToListAsync();
         }
 
         public async Task<User> GetUserByIdAsync(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            { 
-                return null;
-            }
-            return user;
+            return await _context.Users.FindAsync(id);
         }
 
         public async Task<User> UpdateUserAsync(User user)
@@ -54,9 +48,8 @@ namespace Booking.Client.Services
             {
                 _context.Entry(existingUser).CurrentValues.SetValues(user);
                 await _context.SaveChangesAsync();
-                return user;
-            }
-            return null;
+            }                                
+            return user;
         }
     }
 }
