@@ -1,12 +1,13 @@
 ﻿using Booking.Client.Data.Models;
 
-namespace Booking.Client.Services.Interfaces
+namespace Booking.Client.Repositories.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(string id);
-        Task<User> AddUserAsync(string username, string fullname, string password);
+        Task<User> GetUserByUsernameAsync(string username);
+        Task AddUserAsync(User user);
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(string id);
     }

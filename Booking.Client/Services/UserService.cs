@@ -1,55 +1,64 @@
 ﻿using Booking.Client.Data;
 using Booking.Client.Data.Models;
+using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services.Interfaces;
+using Booking.Client.Utils;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Client.Services
 {
     public class UserService : IUserService
     {
-        private readonly ApplicationDBContext _context;
-        public UserService(ApplicationDBContext context)
-        {
-            _context = context;
-        }
-        public async Task<User> AddUserAsync(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
+        private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public async Task<User> DeleteUserAsync(string id)
+        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
-           var user = await _context.Users.FindAsync(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-            }
-            return user;
+            _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
-
         public async Task<IEnumerable<User>> GetAllUsersAsync()
-        {            
-            return await _context.Users.ToListAsync();
+        {
+            return await _userRepository.GetAllUsersAsync();
         }
 
         public async Task<User> GetUserByIdAsync(string id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _userRepository.GetUserByIdAsync(id);
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<User> AddUserAsync(string username, string fullname, string password)
         {
-            var existingUser = await _context.Users.FindAsync(user.Id);
+            var existingUser = await _userRepository.GetUserByUsernameAsync(username);
             if (existingUser != null)
             {
-                _context.Entry(existingUser).CurrentValues.SetValues(user);
-                await _context.SaveChangesAsync();
-            }                                
-            return user;
+                throw new Exception("Username already exists");
+            }
+            var userId = Guid.NewGuid().ToString();
+            var passhwordHash = _passwordHasher.HashPassword(password);
+
+            var newUser = new User
+            {
+                Id = userId,
+                Username = username,
+                FullName = fullname,
+                Password = passhwordHash
+            };
+
+            await _userRepository.AddUserAsync(newUser);
+            return newUser;
+        }
+
+        public async Task DeleteUserAsync(string id)
+        {
+            await _userRepository.DeleteUserAsync(id);
+        }       
+
+        public async Task UpdateUserAsync(User user)
+        {
+            await _userRepository.UpdateUserAsync(user);
         }
     }
 }
