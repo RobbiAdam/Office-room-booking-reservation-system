@@ -15,6 +15,8 @@ namespace Booking.Client
             services.AddScoped<IMeetingService, MeetingService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            //services.AddScoped<IMeetingRepository, MeetingRepository>();
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 

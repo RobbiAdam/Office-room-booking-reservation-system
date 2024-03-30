@@ -1,4 +1,5 @@
 ﻿using Booking.Client.Data.Models;
+using Booking.Client.DTOs.Requests.Rooms;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,16 +17,17 @@ namespace Booking.Client.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetRooms()
         {
-            return Ok(await _roomService.GetAllRoomsAsync());
+            var rooms = await _roomService.GetAllRoomsAsync();
+            return Ok(rooms);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("{roomId}")]
+        public async Task<IActionResult> GetRoom(string roomId)
         {
-            var room = await _roomService.GetRoomByIdAsync(id);
-            if (room == null)
+            var room = await _roomService.GetRoomByIdAsync(roomId);
+            if(room == null)
             {
                 return NotFound();
             }
@@ -33,32 +35,60 @@ namespace Booking.Client.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRoom(Room room)
+        public async Task<IActionResult> AddRoom([FromBody] AddRoomRequest request)
         {
-            var newRoom  = await _roomService.AddRoomAsync(room);
-            return Ok(newRoom);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var newRoom = await _roomService.AddRoomAsync(request.Name, request.Capacity, request.Location);
+                return Ok(newRoom);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateRoom(Room room)
+        [HttpPut("{roomId}")]
+        public async Task<IActionResult> UpdateRoom(string roomId, [FromBody] UpdateRoomRequest request)
         {
-            var updatedRoom = await _roomService.UpdateRoomAsync(room);
-            if (updatedRoom == null)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var room = await _roomService.GetRoomByIdAsync(roomId);
+            if (room == null)
             {
                 return NotFound();
             }
-            return Ok(updatedRoom);
+            room.Name = request.Name;
+            room.Capacity = request.Capacity;
+            room.Location = request.Location;
+
+            try
+            {
+                await _roomService.UpdateRoomAsync(room);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("{roomId}")]
+        public async Task<IActionResult> DeleteRoom(string roomId)
         {
-            var deletedRoom = await _roomService.DeleteRoomAsync(id);
-            if (deletedRoom == null)
+            var room = await _roomService.GetRoomByIdAsync(roomId);
+            if (room == null)
             {
                 return NotFound();
             }
-            return Ok(deletedRoom);
+            await _roomService.DeleteRoomAsync(roomId);
+            return Ok();    
         }
     }
 }

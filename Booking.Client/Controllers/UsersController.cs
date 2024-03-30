@@ -1,6 +1,6 @@
 ﻿using Booking.Client.Data;
 using Booking.Client.Data.Models;
-using Booking.Client.DTOs.Requests;
+using Booking.Client.DTOs.Requests.Users;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +19,14 @@ namespace Booking.Client.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetUsers()
         {
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> Get(string userId)
+        public async Task<IActionResult> GetUser(string userId)
         {
             var user = await _userService.GetUserByIdAsync(userId);
             if (user == null)
@@ -79,13 +79,13 @@ namespace Booking.Client.Controllers
         }
 
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> Delete(string userId)
+        public async Task<IActionResult> DeleteUser(string userId)
         {
-            var user = await _userService.GetUserByIdAsync(userId);
+           var user = await _userService.GetUserByIdAsync(userId);
            if(user == null)
-            {
+           {
                 return NotFound();
-            }
+           }
            await _userService.DeleteUserAsync(userId);
            return Ok();
         }

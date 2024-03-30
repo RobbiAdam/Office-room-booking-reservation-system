@@ -1,13 +1,13 @@
 ﻿using Booking.Client.Data.Models;
 
-namespace Booking.Client.Services.Interfaces
+namespace Booking.Client.Repositories.Interfaces
 {
-    public interface IRoomService
+    public interface IRoomRepository
     {
         Task<IEnumerable<Room>> GetAllRoomsAsync();
         Task<Room> GetRoomByIdAsync(string id);
         Task<Room> GetRoomByRoomNameAsync(string name);
-        Task<Room> AddRoomAsync(string name, int capacity, string location);
+        Task AddRoomAsync(Room room);
         Task UpdateRoomAsync(Room room);
         Task DeleteRoomAsync(string id);
     }
