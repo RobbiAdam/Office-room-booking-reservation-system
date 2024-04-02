@@ -1,10 +1,10 @@
-﻿using Booking.Client.Repositories;
+﻿using Booking.Client.DTOs.Mappings;
+using Booking.Client.Repositories;
 using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services;
 using Booking.Client.Services.Interfaces;
 using Booking.Client.Utils;
-using Booking.Client.Utils.Mappings;
-using Mapster;
+
 
 namespace Booking.Client
 {
@@ -12,8 +12,8 @@ namespace Booking.Client
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            MappingConfig.RegisterMaps();
-
+            services.AddSingleton<MapperConfig>();
+            //services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IMeetingService, MeetingService>();

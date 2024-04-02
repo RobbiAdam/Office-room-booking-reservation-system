@@ -6,7 +6,7 @@ namespace Booking.Client.Models
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public string FullName { get; set; }
+        public string Fullname { get; set; }
 
         public virtual ICollection<Meeting> Meetings { get; set; } = new List<Meeting>();
     }

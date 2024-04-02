@@ -1,5 +1,9 @@
 ﻿namespace Booking.Client.DTOs
 {
-    public record UserDTO(string Id, string Username, string FullName);
-
+    public record UserDTO
+    {
+        public string Id { get; set; }
+        public string Username  { get; set; }
+        public string Fullname { get; set; }
+    }
 }

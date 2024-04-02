@@ -9,6 +9,11 @@ namespace Booking.Client.Models
         public DateTime EndTime { get; set; }
         public string RoomId { get; set; }
         public string UserId { get; set; }
+        public Room Room { get; set; }
+        public User OrganizerUser { get; set; }
+        public IEnumerable<User> Attendees { get; set; }
+
+
 
     }
 }

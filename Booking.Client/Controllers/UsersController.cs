@@ -1,6 +1,6 @@
 ﻿using Booking.Client.Data;
-
-using Booking.Client.Requests.Users;
+using Booking.Client.DTOs.Requests.Users;
+using Booking.Client.DTOs.Responses;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,13 +26,14 @@ namespace Booking.Client.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUser(string userId)
+        public async Task<ActionResult<UserResponse>> GetUser(string userId)
         {
             var user = await _userService.GetUserByIdAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
+
             return Ok(user);
         }
 
@@ -45,7 +46,7 @@ namespace Booking.Client.Controllers
             }
             try
             {
-                var newUser = await _userService.AddUserAsync(request.Username, request.FullName, request.Password);
+                var newUser = await _userService.AddUserAsync(request);
                 return Ok(newUser);
             }
             catch (Exception ex)
@@ -56,26 +57,29 @@ namespace Booking.Client.Controllers
 
         [HttpPut("{userId}")]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody] UpdateUserRequest request)
-        {
-            if(!ModelState.IsValid)
+        {            
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = await _userService.GetUserByIdAsync(userId);
-            if(user == null)
-            {
-                return NotFound();
-            }
-            user.FullName = request.FullName;
             try
             {
-                await _userService.UpdateUserAsync(user);
+                var user = await _userService.GetUserByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.Fullname = request.Fullname;
+                await _userService.UpdateUserAsync(userId, request);
+
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-            }    
+                return BadRequest("Error when updating user " + ex.Message);
+            }
         }
 
         [HttpDelete("{userId}")]

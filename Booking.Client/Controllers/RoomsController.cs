@@ -1,4 +1,5 @@
-﻿using Booking.Client.Requests.Rooms;
+﻿using Booking.Client.DTOs.Requests.Rooms;
+
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

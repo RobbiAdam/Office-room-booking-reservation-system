@@ -1,6 +1,6 @@
-﻿namespace Booking.Client.Requests.Rooms
+﻿namespace Booking.Client.DTOs.Requests.Rooms
 {
-    public class CreateRoomRequest
+    public class UpdateRoomRequest
     {
         public string Name { get; set; }
         public int Capacity { get; set; }
