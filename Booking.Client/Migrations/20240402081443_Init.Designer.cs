@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Client.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240329132707_Init")]
+    [Migration("20240402081443_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Booking.Client.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Booking.Client.Data.Models.Meeting", b =>
+            modelBuilder.Entity("Booking.Client.Models.Meeting", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -57,7 +57,7 @@ namespace Booking.Client.Migrations
                     b.ToTable("Meetings");
                 });
 
-            modelBuilder.Entity("Booking.Client.Data.Models.Room", b =>
+            modelBuilder.Entity("Booking.Client.Models.Room", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -78,7 +78,7 @@ namespace Booking.Client.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("Booking.Client.Data.Models.User", b =>
+            modelBuilder.Entity("Booking.Client.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -100,27 +100,27 @@ namespace Booking.Client.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Booking.Client.Data.Models.Meeting", b =>
+            modelBuilder.Entity("Booking.Client.Models.Meeting", b =>
                 {
-                    b.HasOne("Booking.Client.Data.Models.Room", null)
+                    b.HasOne("Booking.Client.Models.Room", null)
                         .WithMany("Meetings")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Client.Data.Models.User", null)
+                    b.HasOne("Booking.Client.Models.User", null)
                         .WithMany("Meetings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Booking.Client.Data.Models.Room", b =>
+            modelBuilder.Entity("Booking.Client.Models.Room", b =>
                 {
                     b.Navigation("Meetings");
                 });
 
-            modelBuilder.Entity("Booking.Client.Data.Models.User", b =>
+            modelBuilder.Entity("Booking.Client.Models.User", b =>
                 {
                     b.Navigation("Meetings");
                 });

@@ -1,4 +1,4 @@
-﻿using Booking.Client.Data.Models;
+﻿using Booking.Client.Models;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

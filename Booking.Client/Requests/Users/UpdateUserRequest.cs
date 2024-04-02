@@ -1,4 +1,4 @@
-﻿namespace Booking.Client.DTOs.Requests.Users
+﻿namespace Booking.Client.Requests.Users
 {
     public class UpdateUserRequest
     {

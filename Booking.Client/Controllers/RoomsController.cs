@@ -1,5 +1,4 @@
-﻿using Booking.Client.Data.Models;
-using Booking.Client.DTOs.Requests.Rooms;
+﻿using Booking.Client.Requests.Rooms;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +34,7 @@ namespace Booking.Client.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRoom([FromBody] AddRoomRequest request)
+        public async Task<IActionResult> AddRoom([FromBody] CreateRoomRequest request)
         {
             if (!ModelState.IsValid)
             {

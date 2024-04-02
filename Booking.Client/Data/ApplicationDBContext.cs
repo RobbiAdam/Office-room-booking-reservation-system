@@ -1,4 +1,4 @@
-﻿using Booking.Client.Data.Models;
+﻿using Booking.Client.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Client.Data

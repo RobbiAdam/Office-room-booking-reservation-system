@@ -1,5 +1,5 @@
 ﻿using Booking.Client.Data;
-using Booking.Client.Data.Models;
+using Booking.Client.Models;
 using Booking.Client.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

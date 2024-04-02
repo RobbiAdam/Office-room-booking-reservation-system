@@ -1,4 +1,4 @@
-﻿using Booking.Client.Data.Models;
+﻿using Booking.Client.Models;
 
 namespace Booking.Client.Repositories.Interfaces
 {

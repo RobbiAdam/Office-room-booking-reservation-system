@@ -1,4 +1,4 @@
-﻿namespace Booking.Client.Data.Models.Bases
+﻿namespace Booking.Client.Models.Bases
 {
     public abstract class BaseEntity
     {

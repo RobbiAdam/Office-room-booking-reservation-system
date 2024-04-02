@@ -1,6 +1,6 @@
-﻿using Booking.Client.Data.Models.Bases;
+﻿using Booking.Client.Models.Bases;
 
-namespace Booking.Client.Data.Models
+namespace Booking.Client.Models
 {
     public class Meeting : BaseEntity
     {

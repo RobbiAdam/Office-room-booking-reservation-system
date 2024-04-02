@@ -1,6 +1,6 @@
 ﻿using Booking.Client.Data;
-using Booking.Client.Data.Models;
-using Booking.Client.DTOs.Requests.Users;
+
+using Booking.Client.Requests.Users;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +37,7 @@ namespace Booking.Client.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> AddUser([FromBody] AddUserRequest request)
+        public async Task<IActionResult> AddUser([FromBody] CreateUserRequest request)
         {
             if(!ModelState.IsValid)
             {

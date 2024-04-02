@@ -1,6 +1,6 @@
-﻿namespace Booking.Client.DTOs.Requests.Users
+﻿namespace Booking.Client.Requests.Users
 {
-    public class AddUserRequest
+    public class CreateUserRequest
     {
         public string Username { get; set; }
         public string FullName { get; set; }
