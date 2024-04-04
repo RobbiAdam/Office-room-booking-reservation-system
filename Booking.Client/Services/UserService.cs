@@ -17,25 +17,25 @@ namespace Booking.Client.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
-        private readonly MapperConfig _mapper;
+        //private readonly MapperConfig _mapper;
 
-        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, MapperConfig mapper)
+        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
-            _mapper = mapper;
+            
         }
         public async Task<IEnumerable<UserResponse>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return users.Select(_mapper.MapEntityToUserResponse);
+            return users.Select(user => user.ToResponseDTO());
         }
 
         public async Task<UserResponse> GetUserByIdAsync(string id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
             
-            return user?.ToDTO();
+            return user?.ToResponseDTO();
         }
 
         public async Task<UserResponse> AddUserAsync(CreateUserRequest request)
@@ -49,12 +49,12 @@ namespace Booking.Client.Services
             var userId = Guid.NewGuid().ToString();
             var passwordHash = _passwordHasher.HashPassword(request.Password);
 
-            var newUser = _mapper.MapCreateUserRequestDTOToEntity(request);
+            var newUser = request.ToEntityCreateUser();
             newUser.Id = userId;
             newUser.Password = passwordHash;
 
             await _userRepository.AddUserAsync(newUser);
-            return _mapper.MapEntityToUserResponse(newUser);
+            return newUser.ToResponseDTO();
         }
 
         public async Task DeleteUserAsync(string id)
@@ -69,12 +69,11 @@ namespace Booking.Client.Services
             {
                 throw new Exception("User not found");
             }
+            
+            var updatedUser = request.ToEntityUpdateUser(user);            
 
-            var updatedUser = _mapper.MapUpdateUserRequestDTOToEntity(request);
-            user.Fullname = updatedUser.Fullname;
-
-            await _userRepository.UpdateUserAsync(user);
-            return _mapper.MapEntityToUserResponse(user);
+            await _userRepository.UpdateUserAsync(updatedUser);
+            return updatedUser.ToResponseDTO();
         }
     }
 }

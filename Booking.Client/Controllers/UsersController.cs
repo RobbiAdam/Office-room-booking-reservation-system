@@ -69,9 +69,7 @@ namespace Booking.Client.Controllers
                 if (user == null)
                 {
                     return NotFound();
-                }
-
-                user.Fullname = request.Fullname;
+                }                
                 await _userService.UpdateUserAsync(userId, request);
 
                 return Ok();

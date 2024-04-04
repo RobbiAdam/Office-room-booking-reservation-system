@@ -4,9 +4,14 @@ using Booking.Client.Models;
 
 namespace Booking.Client.DTOs.Mappings
 {
-    public class MapperConfig
+    public static class MapperConfig
     {
-        public User MapCreateUserRequestDTOToEntity(CreateUserRequest userRequestDTO)
+        public static UserResponse ToResponseDTO(this User user)
+        {
+            return new UserResponse(user.Id, user.Username, user.Fullname);
+
+        }
+        public static User ToEntityCreateUser(this CreateUserRequest userRequestDTO)
         {
             return new User
             {
@@ -15,30 +20,14 @@ namespace Booking.Client.DTOs.Mappings
                 Password = userRequestDTO.Password
             };
         }
-        public User MapUpdateUserRequestDTOToEntity(UpdateUserRequest userRequestDTO)
+        public static User ToEntityUpdateUser(this UpdateUserRequest userRequestDTO, User existingUser)
         {
-            User user = new User
-            {                
-                Fullname = userRequestDTO.Fullname                
-            };
-            return user;
+            //User user = new User
+            //{                
+            //    Fullname = userRequestDTO.Fullname                
+            //};
+            existingUser.Fullname = userRequestDTO.Fullname;
+            return existingUser;
         }
-        public UserResponse MapEntityToUserResponse(User user)
-        {
-            return new UserResponse
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Fullname = user.Fullname
-            };
-        }        
-
     }
-    public static class UserMapper{
-        public static UserResponse ToDTO(this User user) 
-        { return new UserResponse 
-        { Id = user.Id, Username = user.Username, Fullname = user.Fullname };
-        } 
-    }
-
 }

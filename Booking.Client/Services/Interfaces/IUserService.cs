@@ -1,6 +1,6 @@
 ﻿using Booking.Client.DTOs.Requests.Users;
 using Booking.Client.DTOs.Responses;
-using Booking.Client.Models;
+
 
 namespace Booking.Client.Services.Interfaces
 {

@@ -12,8 +12,8 @@ namespace Booking.Client
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddSingleton<MapperConfig>();
-            //services.
+            //services.AddSingleton<MapperConfig>();
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IMeetingService, MeetingService>();
