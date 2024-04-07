@@ -1,8 +1,9 @@
 ﻿using Booking.Client.Models;
+using Booking.Server.Repositories.Interfaces;
 
 namespace Booking.Client.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository :IBookingRepository
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(string id);

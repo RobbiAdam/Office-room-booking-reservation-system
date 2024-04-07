@@ -4,6 +4,8 @@ using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services;
 using Booking.Client.Services.Interfaces;
 using Booking.Client.Utils;
+using Booking.Server.Repositories;
+using Booking.Server.Repositories.Interfaces;
 
 
 namespace Booking.Client
@@ -12,15 +14,19 @@ namespace Booking.Client
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            //services.AddSingleton<MapperConfig>();
+            services.Scan(s => s
+            .FromAssemblyOf<IBookingService>()
+            .AddClasses(c => c.AssignableTo<IBookingService>())
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            );
 
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRoomService, RoomService>();
-            services.AddScoped<IMeetingService, MeetingService>();
-
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRoomRepository, RoomRepository>();
-            //services.AddScoped<IMeetingRepository, MeetingRepository>();
+            services.Scan(s => s
+            .FromAssemblyOf<IBookingRepository>()
+            .AddClasses(c => c.AssignableTo<IBookingRepository>())
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            );
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 

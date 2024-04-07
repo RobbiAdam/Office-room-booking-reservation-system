@@ -1,8 +1,9 @@
 ﻿using Booking.Client.Models;
+using Booking.Server.Repositories.Interfaces;
 
 namespace Booking.Client.Repositories.Interfaces
 {
-    public interface IRoomRepository
+    public interface IRoomRepository :IBookingRepository
     {
         Task<IEnumerable<Room>> GetAllRoomsAsync();
         Task<Room> GetRoomByIdAsync(string id);

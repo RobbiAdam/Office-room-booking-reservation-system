@@ -1,14 +1,16 @@
 ﻿using Booking.Client.Models;
+using Booking.Server.DTOs.Requests.Meetings;
+using Booking.Server.DTOs.Responses;
 
 namespace Booking.Client.Services.Interfaces
 {
-    public interface IMeetingService
+    public interface IMeetingService : IBookingService
     {
-        Task<IEnumerable<Meeting>> GetAllMeetingsAsync();
-        Task<Meeting> GetMeetingByIdAsync(string id);
-        Task<Meeting> AddMeetingAsync(Meeting meeting);
-        Task<Meeting> UpdateMeetingAsync(Meeting meeting);
-        Task<Meeting> DeleteMeetingAsync(string id);    
+        Task<IEnumerable<MeetingResponse>> GetAllMeetingsAsync();
+        Task<MeetingResponse> GetMeetingByIdAsync(string id);
+        Task<MeetingResponse> AddMeetingAsync(CreateMeetingRequest request);
+        Task UpdateMeetingAsync(string meetingId, UpdateMeetingRequest request);
+        Task DeleteMeetingAsync(string id);    
         
 
     }

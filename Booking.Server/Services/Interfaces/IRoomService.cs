@@ -3,7 +3,7 @@ using Booking.Server.DTOs.Responses;
 
 namespace Booking.Client.Services.Interfaces
 {
-    public interface IRoomService
+    public interface IRoomService : IBookingService
     {
         Task<IEnumerable<RoomResponse>> GetAllRoomsAsync();
         Task<RoomResponse> GetRoomByIdAsync(string id);
