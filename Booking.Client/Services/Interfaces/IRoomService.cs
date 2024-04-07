@@ -1,14 +1,15 @@
-﻿using Booking.Client.Models;
+﻿using Booking.Client.DTOs.Requests.Rooms;
+using Booking.Server.DTOs.Responses;
 
 namespace Booking.Client.Services.Interfaces
 {
     public interface IRoomService
     {
-        Task<IEnumerable<Room>> GetAllRoomsAsync();
-        Task<Room> GetRoomByIdAsync(string id);
-        Task<Room> GetRoomByRoomNameAsync(string name);
-        Task<Room> AddRoomAsync(string name, int capacity, string location);
-        Task UpdateRoomAsync(Room room);
+        Task<IEnumerable<RoomResponse>> GetAllRoomsAsync();
+        Task<RoomResponse> GetRoomByIdAsync(string id);
+        Task<RoomResponse> GetRoomByRoomNameAsync(string name);
+        Task<RoomResponse> AddRoomAsync(CreateRoomRequest request);
+        Task<RoomResponse> UpdateRoomAsync(string Id, UpdateRoomRequest request);
         Task DeleteRoomAsync(string id);
     }
 }

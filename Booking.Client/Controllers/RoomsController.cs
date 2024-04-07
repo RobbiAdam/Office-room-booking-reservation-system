@@ -1,5 +1,4 @@
 ﻿using Booking.Client.DTOs.Requests.Rooms;
-
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,7 +42,7 @@ namespace Booking.Client.Controllers
             }
             try
             {
-                var newRoom = await _roomService.AddRoomAsync(request.Name, request.Capacity, request.Location);
+                var newRoom = await _roomService.AddRoomAsync(request);
                 return Ok(newRoom);
             }
             catch (Exception ex)
@@ -64,13 +63,9 @@ namespace Booking.Client.Controllers
             {
                 return NotFound();
             }
-            room.Name = request.Name;
-            room.Capacity = request.Capacity;
-            room.Location = request.Location;
-
             try
             {
-                await _roomService.UpdateRoomAsync(room);
+                await _roomService.UpdateRoomAsync(roomId, request);
                 return Ok();
             }
             catch (Exception ex)

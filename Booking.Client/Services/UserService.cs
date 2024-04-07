@@ -1,15 +1,9 @@
-﻿using Booking.Client.Data;
-using Booking.Client.DTOs;
-using Booking.Client.DTOs.Mappings;
+﻿using Booking.Client.DTOs.Mappings;
 using Booking.Client.DTOs.Requests.Users;
 using Booking.Client.DTOs.Responses;
-using Booking.Client.Models;
 using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services.Interfaces;
 using Booking.Client.Utils;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Client.Services
 {
@@ -44,13 +38,10 @@ namespace Booking.Client.Services
             if (user != null)
             {
                 throw new Exception("Username already exists");
-            }
-
-            var userId = Guid.NewGuid().ToString();
+            }                       
             var passwordHash = _passwordHasher.HashPassword(request.Password);
 
-            var newUser = request.ToEntityCreateUser();
-            newUser.Id = userId;
+            var newUser = request.ToEntityCreateUser();            
             newUser.Password = passwordHash;
 
             await _userRepository.AddUserAsync(newUser);

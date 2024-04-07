@@ -1,6 +1,8 @@
-﻿using Booking.Client.DTOs.Requests.Users;
+﻿using Booking.Client.DTOs.Requests.Rooms;
+using Booking.Client.DTOs.Requests.Users;
 using Booking.Client.DTOs.Responses;
 using Booking.Client.Models;
+using Booking.Server.DTOs.Responses;
 
 namespace Booking.Client.DTOs.Mappings
 {
@@ -22,12 +24,31 @@ namespace Booking.Client.DTOs.Mappings
         }
         public static User ToEntityUpdateUser(this UpdateUserRequest userRequestDTO, User existingUser)
         {
-            //User user = new User
-            //{                
-            //    Fullname = userRequestDTO.Fullname                
-            //};
             existingUser.Fullname = userRequestDTO.Fullname;
             return existingUser;
+        }
+        // Room DTOs response
+        public static RoomResponse ToResponseDTO(this Room room)
+        {
+            return new RoomResponse(room.Id, room.Name, room.Capacity, room.Location);
+        }
+
+        public static Room ToEntityCreateRoom(this CreateRoomRequest roomRequestDTO)
+        {
+            return new Room
+            {
+                Name = roomRequestDTO.Name,
+                Capacity = roomRequestDTO.Capacity,
+                Location = roomRequestDTO.Location
+            };
+        }
+
+        public static Room ToEntityUpdateRoom(this UpdateRoomRequest roomRequestDTO, Room existingRoom)
+        {
+            existingRoom.Name = roomRequestDTO.Name;
+            existingRoom.Capacity = roomRequestDTO.Capacity;
+            existingRoom.Location = roomRequestDTO.Location;
+            return existingRoom;
         }
     }
 }

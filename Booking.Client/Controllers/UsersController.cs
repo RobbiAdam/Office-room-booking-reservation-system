@@ -1,9 +1,8 @@
-﻿using Booking.Client.Data;
-using Booking.Client.DTOs.Requests.Users;
+﻿using Booking.Client.DTOs.Requests.Users;
 using Booking.Client.DTOs.Responses;
 using Booking.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Booking.Client.Controllers
 {
@@ -62,16 +61,15 @@ namespace Booking.Client.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
+
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
             {
-                var user = await _userService.GetUserByIdAsync(userId);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }                
+                return NotFound();
+            }
+            try
+            {       
                 await _userService.UpdateUserAsync(userId, request);
-
                 return Ok();
             }
             catch (Exception ex)

@@ -1,8 +1,9 @@
-﻿using Booking.Client.Data;
-using Booking.Client.Models;
+﻿using Booking.Client.DTOs.Mappings;
+using Booking.Client.DTOs.Requests.Rooms;
 using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Booking.Server.DTOs.Responses;
+
 
 namespace Booking.Client.Services
 {
@@ -15,47 +16,51 @@ namespace Booking.Client.Services
             _roomRepository = roomRepository;
         }
 
-        public async Task<IEnumerable<Room>> GetAllRoomsAsync()
+        public async Task<IEnumerable<RoomResponse>> GetAllRoomsAsync()
         {
-            return await _roomRepository.GetAllRoomsAsync();
+            var rooms =await _roomRepository.GetAllRoomsAsync();
+            return rooms.Select(r => r.ToResponseDTO());
         }
 
-        public async Task<Room> GetRoomByIdAsync(string id)
+        public async Task<RoomResponse> GetRoomByIdAsync(string roomId)
         {
-            return await _roomRepository.GetRoomByIdAsync(id);
+            var room = await _roomRepository.GetRoomByIdAsync(roomId);
+            return room.ToResponseDTO();
         }
 
-        public async Task<Room> GetRoomByRoomNameAsync(string name)
+        public async Task<RoomResponse> GetRoomByRoomNameAsync(string name)
         {
-            return await _roomRepository.GetRoomByRoomNameAsync(name);
+            var room = await _roomRepository.GetRoomByRoomNameAsync(name);
+            return room.ToResponseDTO();
         }
-        public async Task<Room> AddRoomAsync(string name, int capacity, string location)
+        public async Task<RoomResponse> AddRoomAsync(CreateRoomRequest request)
         {
-            var existingRoom = await _roomRepository.GetRoomByRoomNameAsync(name);
+            var existingRoom = await _roomRepository.GetRoomByRoomNameAsync(request.Name);
             if(existingRoom != null)
             {
                 throw new Exception("Room already exists");
             }
-            var roomId = Guid.NewGuid().ToString();
-            var newRoom = new Room
-            {
-                Id = roomId,
-                Name = name,
-                Capacity = capacity,
-                Location = location
-            };
+            
+            var newRoom = request.ToEntityCreateRoom();            
 
             await _roomRepository.AddRoomAsync(newRoom);
-            return newRoom;
+            return newRoom.ToResponseDTO();
         }
 
-        public async Task UpdateRoomAsync(Room room)
+        public async Task<RoomResponse> UpdateRoomAsync(string roomId, UpdateRoomRequest request)
         {
-            await _roomRepository.UpdateRoomAsync(room);
+            var room = await _roomRepository.GetRoomByIdAsync(roomId);
+            if (room == null)
+            {
+                throw new Exception("Room not found");
+            }
+            var updatedRoom = request.ToEntityUpdateRoom(room);
+            await _roomRepository.UpdateRoomAsync(updatedRoom);
+            return updatedRoom.ToResponseDTO();
         }
-        public async Task DeleteRoomAsync(string id)
+        public async Task DeleteRoomAsync(string roomId)
         {
-            await _roomRepository.DeleteRoomAsync(id);
+            await _roomRepository.DeleteRoomAsync(roomId);
         }
     }
 }
