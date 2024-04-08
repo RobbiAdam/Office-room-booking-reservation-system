@@ -3,6 +3,7 @@ using Booking.Client.DTOs.Requests.Rooms;
 using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services.Interfaces;
 using Booking.Server.DTOs.Responses;
+using Booking.Server.Validations.Rooms;
 
 
 namespace Booking.Client.Services
@@ -10,10 +11,16 @@ namespace Booking.Client.Services
     public class RoomService : IRoomService
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly CreateRoomRequestValidator _createRoomRequestValidator;
+        private readonly UpdateRoomRequestValidator _updateRoomRequestValidator;
 
-        public RoomService(IRoomRepository roomRepository)        
+        public RoomService(IRoomRepository roomRepository, 
+            CreateRoomRequestValidator createRoomRequestValidator, 
+            UpdateRoomRequestValidator updateRoomRequestValidator)
         {
             _roomRepository = roomRepository;
+            _createRoomRequestValidator = createRoomRequestValidator;
+            _updateRoomRequestValidator = updateRoomRequestValidator;
         }
 
         public async Task<IEnumerable<RoomResponse>> GetAllRoomsAsync()
@@ -35,6 +42,14 @@ namespace Booking.Client.Services
         }
         public async Task<RoomResponse> AddRoomAsync(CreateRoomRequest request)
         {
+            var validationResult = await _createRoomRequestValidator.ValidationAsync(request);
+            if (!validationResult.IsValid)
+            {
+                throw new ArgumentException
+                    (validationResult.Errors.Select(e => e.ErrorMessage)
+                    .Aggregate((x, y) => $"{x}{Environment.NewLine}{y}"));
+            }
+
             var existingRoom = await _roomRepository.GetRoomByRoomNameAsync(request.Name);
             if(existingRoom != null)
             {
@@ -49,6 +64,14 @@ namespace Booking.Client.Services
 
         public async Task<RoomResponse> UpdateRoomAsync(string roomId, UpdateRoomRequest request)
         {
+            var validationResult = await _updateRoomRequestValidator.ValidationAsync(request);
+            if (!validationResult.IsValid)
+            {
+                throw new ArgumentException
+                    (validationResult.Errors.Select(e => e.ErrorMessage)
+                    .Aggregate((x, y) => $"{x}{Environment.NewLine}{y}"));
+            }
+
             var room = await _roomRepository.GetRoomByIdAsync(roomId);
             if (room == null)
             {

@@ -1,11 +1,8 @@
-﻿using Booking.Client.DTOs.Mappings;
-using Booking.Client.Repositories;
-using Booking.Client.Repositories.Interfaces;
-using Booking.Client.Services;
-using Booking.Client.Services.Interfaces;
+﻿using Booking.Client.Services.Interfaces;
 using Booking.Client.Utils;
-using Booking.Server.Repositories;
 using Booking.Server.Repositories.Interfaces;
+using Booking.Server.Validations.Rooms;
+using Booking.Server.Validations.Users;
 
 
 namespace Booking.Client
@@ -27,6 +24,12 @@ namespace Booking.Client
             .AsImplementedInterfaces()
             .WithScopedLifetime()
             );
+            services.AddTransient<CreateUserRequestValidator>();
+            services.AddTransient<UpdateUserRequestValidator>();
+
+            services.AddTransient<CreateRoomRequestValidator>();
+            services.AddTransient<UpdateRoomRequestValidator>();
+
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
