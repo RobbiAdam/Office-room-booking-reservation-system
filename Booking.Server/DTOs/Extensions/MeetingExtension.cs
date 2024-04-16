@@ -1,6 +1,7 @@
 ﻿using Booking.Client.Models;
 using Booking.Server.DTOs.Requests.Meetings;
 using Booking.Server.DTOs.Responses;
+using Mapster;
 
 namespace Booking.Server.DTOs.Extensions
 {
@@ -8,39 +9,22 @@ namespace Booking.Server.DTOs.Extensions
     {
         public static MeetingResponse ToResponseDTO(this Meeting meeting)
         {
-            return new MeetingResponse
-            {
-                Id = meeting.Id,
-                Title = meeting.Title,
-                StartTime = meeting.StartTime,
-                EndTime = meeting.EndTime,
-                RoomName = meeting.Room.Name,
-                OrganizerName = meeting.Organizer.Fullname,
-            };
+            var response = meeting.Adapt<MeetingResponse>();
+            return response;
         }
 
         public static Meeting ToEntityCreateMeeting
             (this CreateMeetingRequest meetingRequestDTO, User organizer, Room room)
         {
-            return new Meeting
-            {
-                Title = meetingRequestDTO.Title,
-                StartTime = meetingRequestDTO.StartTime,
-                EndTime = meetingRequestDTO.EndTime,
-                RoomId = meetingRequestDTO.RoomId,
-                OrganizerId = meetingRequestDTO.OrganizerId,
-                Room = room,
-                Organizer = organizer
-            };
+            var meeting = meetingRequestDTO.Adapt<Meeting>();
+            return meeting;
         }
 
         public static Meeting ToEntityUpdateMeeting
             (this UpdateMeetingRequest meetingRequestDTO, Meeting existingMeeting)
         {
-            existingMeeting.Title = meetingRequestDTO.Title;
-            existingMeeting.StartTime = meetingRequestDTO.StartTime;
-            existingMeeting.EndTime = meetingRequestDTO.EndTime;
-            return existingMeeting;
+            var meeting = meetingRequestDTO.Adapt(existingMeeting);
+            return meeting;
         }
     }
 }

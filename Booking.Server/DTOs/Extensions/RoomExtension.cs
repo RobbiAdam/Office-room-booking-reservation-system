@@ -1,6 +1,7 @@
 ﻿using Booking.Client.DTOs.Requests.Rooms;
 using Booking.Client.Models;
 using Booking.Server.DTOs.Responses;
+using Mapster;
 
 namespace Booking.Server.DTOs.Extensions
 {
@@ -8,31 +9,20 @@ namespace Booking.Server.DTOs.Extensions
     {
         public static RoomResponse ToResponseDTO(this Room room)
         {
-            return new RoomResponse
-            {
-                Id = room.Id,
-                RoomName = room.Name,
-                Capacity = room.Capacity,
-                Location = room.Location
-            };
+            var response = room.Adapt<RoomResponse>();
+            return response;
         }
 
         public static Room ToEntityCreateRoom(this CreateRoomRequest roomRequestDTO)
         {
-            return new Room
-            {
-                Name = roomRequestDTO.Name,
-                Capacity = roomRequestDTO.Capacity,
-                Location = roomRequestDTO.Location
-            };
+            var room = roomRequestDTO.Adapt<Room>();
+            return room;
         }
 
         public static Room ToEntityUpdateRoom(this UpdateRoomRequest roomRequestDTO, Room existingRoom)
         {
-            existingRoom.Name = roomRequestDTO.Name;
-            existingRoom.Capacity = roomRequestDTO.Capacity;
-            existingRoom.Location = roomRequestDTO.Location;
-            return existingRoom;
+            var updatedRoom = roomRequestDTO.Adapt(existingRoom);
+            return updatedRoom;
         }
     }
 }

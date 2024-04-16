@@ -1,7 +1,4 @@
-﻿using Booking.Client.DTOs;
-using Booking.Client.Models;
-
-namespace Booking.Server.DTOs.Responses
+﻿namespace Booking.Server.DTOs.Responses
 {
     public class MeetingResponse
     {
@@ -10,7 +7,7 @@ namespace Booking.Server.DTOs.Responses
         public DateTime StartTime { get; init; }
         public DateTime EndTime { get; init; }
         public string RoomName { get; init; }
-        public string OrganizerName { get; init; }        
+        public string OrganizerFullname { get; init; }        
     }
 
     

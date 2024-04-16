@@ -1,5 +1,4 @@
 ﻿using Booking.Client.Models;
-using Booking.Server.DTOs;
 using Booking.Server.DTOs.Responses;
 
 namespace Booking.Client.DTOs.Responses
@@ -9,7 +8,7 @@ namespace Booking.Client.DTOs.Responses
         public string Id { get; init; }
         public string Username { get; init; }
         public string Fullname { get; init; }
-        public IEnumerable<MeetingDTO> OrganizedMeetings { get; init; } 
+        public IEnumerable<UserMeetingResponse> OrganizedMeetings { get; init; } 
     }
 
 }

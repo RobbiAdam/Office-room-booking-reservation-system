@@ -1,6 +1,7 @@
 ﻿using Booking.Client.DTOs.Requests.Users;
 using Booking.Client.DTOs.Responses;
 using Booking.Client.Models;
+using Mapster;
 
 namespace Booking.Server.DTOs.Extensions
 {
@@ -8,34 +9,18 @@ namespace Booking.Server.DTOs.Extensions
     {
         public static UserResponse ToResponseDTO(this User user)
         {
-            return new UserResponse
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Fullname = user.Fullname,
-                OrganizedMeetings = user.OrganizedMeetings.Select(m => new MeetingDTO
-                {
-                    MeetingTitle = m.Title,
-                    StartTime = m.StartTime,
-                    EndTime = m.EndTime,
-                    RoomName = m.Room.Name
-                })
-            };
+            var response = user.Adapt<UserResponse>();
+            return response;
         }
-
         public static User ToEntityCreateUser(this CreateUserRequest userRequestDTO)
         {
-            return new User
-            {
-                Username = userRequestDTO.Username,
-                Fullname = userRequestDTO.Fullname,
-                Password = userRequestDTO.Password
-            };
+            var user = userRequestDTO.Adapt<User>();
+            return user;
         }
         public static User ToEntityUpdateUser(this UpdateUserRequest userRequestDTO, User existingUser)
         {
-            existingUser.Fullname = userRequestDTO.Fullname;
-            return existingUser;
+            var user = userRequestDTO.Adapt(existingUser);
+            return user;
         }
     }
 }
