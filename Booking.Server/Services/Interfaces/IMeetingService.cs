@@ -9,7 +9,7 @@ namespace Booking.Client.Services.Interfaces
         Task<IEnumerable<MeetingResponse>> GetAllMeetingsAsync();
         Task<MeetingResponse> GetMeetingByIdAsync(string id);
         Task<MeetingResponse> AddMeetingAsync(CreateMeetingRequest request);
-        Task UpdateMeetingAsync(string meetingId, UpdateMeetingRequest request);
+        Task<MeetingResponse> UpdateMeetingAsync(string meetingId, UpdateMeetingRequest request);
         Task DeleteMeetingAsync(string id);    
         
 

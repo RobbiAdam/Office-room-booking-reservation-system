@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Booking.Client.Migrations
+namespace Booking.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240402081443_Init")]
-    partial class Init
+    [Migration("20240414134422_EntityRelations")]
+    partial class EntityRelations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,10 @@ namespace Booking.Client.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("OrganizerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("RoomId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -44,15 +48,11 @@ namespace Booking.Client.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("OrganizerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Meetings");
                 });
@@ -100,17 +100,51 @@ namespace Booking.Client.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MeetingUser", b =>
+                {
+                    b.Property<string>("AttendedMeetingsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AttendeesId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AttendedMeetingsId", "AttendeesId");
+
+                    b.HasIndex("AttendeesId");
+
+                    b.ToTable("MeetingUser");
+                });
+
             modelBuilder.Entity("Booking.Client.Models.Meeting", b =>
                 {
-                    b.HasOne("Booking.Client.Models.Room", null)
+                    b.HasOne("Booking.Client.Models.User", "Organizer")
+                        .WithMany("OrganizedMeetings")
+                        .HasForeignKey("OrganizerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Client.Models.Room", "Room")
                         .WithMany("Meetings")
                         .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Organizer");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("MeetingUser", b =>
+                {
+                    b.HasOne("Booking.Client.Models.Meeting", null)
+                        .WithMany()
+                        .HasForeignKey("AttendedMeetingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Booking.Client.Models.User", null)
-                        .WithMany("Meetings")
-                        .HasForeignKey("UserId")
+                        .WithMany()
+                        .HasForeignKey("AttendeesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -122,7 +156,7 @@ namespace Booking.Client.Migrations
 
             modelBuilder.Entity("Booking.Client.Models.User", b =>
                 {
-                    b.Navigation("Meetings");
+                    b.Navigation("OrganizedMeetings");
                 });
 #pragma warning restore 612, 618
         }

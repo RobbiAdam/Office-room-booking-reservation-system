@@ -1,14 +1,19 @@
 ﻿using Booking.Client.Models;
+using Booking.Server.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Client.Data
 {
-    public class ApplicationDBContext :DbContext
+    public class ApplicationDBContext : DbContext
     {
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)       
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
-            
+
         }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer();
 
         public DbSet<User> Users { get; set; }
         public DbSet<Room> Rooms { get; set; }
@@ -16,8 +21,9 @@ namespace Booking.Client.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
+            modelBuilder.ApplyConfiguration(new MeetingConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
 
     }

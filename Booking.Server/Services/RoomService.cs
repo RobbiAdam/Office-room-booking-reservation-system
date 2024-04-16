@@ -1,7 +1,7 @@
-﻿using Booking.Client.DTOs.Mappings;
-using Booking.Client.DTOs.Requests.Rooms;
+﻿using Booking.Client.DTOs.Requests.Rooms;
 using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services.Interfaces;
+using Booking.Server.DTOs.Extensions;
 using Booking.Server.DTOs.Responses;
 using Booking.Server.Validations.Rooms;
 

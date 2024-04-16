@@ -17,10 +17,40 @@ namespace Booking.Client.Repositories
         {
             return await _context.Users.ToListAsync();
         }
-
         public async Task<User> GetUserByIdAsync(string id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            //return await _context.Users
+            //    .Include(u => u.OrganizedMeetings)
+            //        .ThenInclude(m => m.Room)
+            //        .Select(u => new User
+            //        {
+            //            Id = u.Id,
+            //            Username = u.Username,
+            //            Fullname = u.Fullname,
+            //            OrganizedMeetings = u.OrganizedMeetings.Select(m => new Meeting
+            //            {
+            //                Id = m.Id,
+            //                Title = m.Title,
+            //                StartTime = m.StartTime,
+            //                EndTime = m.EndTime,
+            //                RoomId = m.RoomId,
+            //                OrganizerId = m.OrganizerId,
+            //                Room = new Room
+            //                {
+            //                    Id = m.Room.Id,
+            //                    Name = m.Room.Name,
+            //                    Capacity = m.Room.Capacity,
+            //                    Location = m.Room.Location
+            //                },
+            //                Organizer = new User
+            //                {
+            //                    Id = m.Organizer.Id,
+            //                    Username = m.Organizer.Username,
+            //                    Fullname = m.Organizer.Fullname
+            //                }
+            //            }).ToList()
+            //        }).FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User> GetUserByUsernameAsync(string username)
@@ -31,7 +61,7 @@ namespace Booking.Client.Repositories
         public async Task AddUserAsync(User user)
         {
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();            
+            await _context.SaveChangesAsync();
         }
         public async Task UpdateUserAsync(User user)
         {
@@ -45,8 +75,7 @@ namespace Booking.Client.Repositories
             {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
-            }            
+            }
         }
-
     }
 }

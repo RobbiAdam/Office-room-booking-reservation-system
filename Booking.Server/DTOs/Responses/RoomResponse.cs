@@ -1,5 +1,11 @@
 ﻿namespace Booking.Server.DTOs.Responses
 {
-    public record RoomResponse(string Id, string Name, int Capacity, string Location);
+    public class RoomResponse
+    {
+        public string Id { get; init; }
+        public string RoomName { get; init; }
+        public int Capacity { get; init; }
+        public string Location { get; init; }
+    }
 
 }

@@ -6,15 +6,13 @@ namespace Booking.Client.Models
     {
         public string Title { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public User Organizer { get; set; }
-        public string UserId { get; set; }
-        public Room Room { get; set; }
+        public DateTime EndTime { get; set; }        
+        public string OrganizerId { get; set; }        
         public string RoomId { get; set; }
 
-        public IEnumerable<User> Attendees { get; set; } = Enumerable.Empty<User>();
+        public virtual Room Room { get; set; }
+        public virtual User Organizer { get; set; }
 
-
-
+        public virtual ICollection<User>? Attendees { get; set; } = new List<User>();
     }
 }

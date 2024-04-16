@@ -1,55 +1,79 @@
-﻿using Booking.Client.Data;
-using Booking.Client.Models;
+﻿using Booking.Client.Repositories.Interfaces;
 using Booking.Client.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Booking.Server.DTOs.Extensions;
+using Booking.Server.DTOs.Requests.Meetings;
+using Booking.Server.DTOs.Responses;
+using Booking.Server.Repositories.Interfaces;
+
 
 namespace Booking.Client.Services
 {
     public class MeetingService : IMeetingService
     {
-        private readonly ApplicationDBContext _context;
+        private readonly IMeetingRepository _meetingRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IRoomRepository _roomRepository;
 
-        public MeetingService(ApplicationDBContext context)
+        public MeetingService(IMeetingRepository meetingRepository, IUserRepository userRepository, IRoomRepository roomRepository)
         {
-            _context = context;
+            _meetingRepository = meetingRepository;
+            _userRepository = userRepository;
+            _roomRepository = roomRepository;
+        }
+        public async Task<IEnumerable<MeetingResponse>> GetAllMeetingsAsync()
+        {
+            var meetings = await _meetingRepository.GetAllMeetingsAsync();
+            return meetings.Select(m => m.ToResponseDTO());
         }
 
-        public async Task<Meeting> AddMeetingAsync(Meeting meeting)
+        public async Task<MeetingResponse> GetMeetingByIdAsync(string id)
         {
-            _context.Meetings.Add(meeting);
-            await _context.SaveChangesAsync();
-            return meeting;
+            var meeting = await _meetingRepository.GetMeetingByIdAsync(id);
+            return meeting.ToResponseDTO();
         }
-
-        public async Task<Meeting> DeleteMeetingAsync(string id)
+        public async Task<MeetingResponse> AddMeetingAsync(CreateMeetingRequest request)
         {
-            var meeting = await _context.Meetings.FindAsync(id);
-            if (meeting != null)
+            var organizer = await _userRepository.GetUserByIdAsync(request.OrganizerId);
+            if (organizer == null)
             {
-                _context.Meetings.Remove(meeting);
-                await _context.SaveChangesAsync();
+                throw new Exception("User not found");
             }
-            return meeting;
-        }
 
-        public async Task<IEnumerable<Meeting>> GetAllMeetingsAsync()
-        {
-            return await _context.Meetings.ToListAsync();
-        }
-
-        public async Task<Meeting> GetMeetingByIdAsync(string id)
-        {
-            return await _context.Meetings.FindAsync(id);
-        }
-        public async Task<Meeting> UpdateMeetingAsync(Meeting meeting)
-        {
-            var existingMeeting = await _context.Meetings.FindAsync(meeting.Id);
-            if (existingMeeting != null)
+            var room = await _roomRepository.GetRoomByIdAsync(request.RoomId);
+            if (room == null)
             {
-                _context.Entry(existingMeeting).CurrentValues.SetValues(meeting);
-                await _context.SaveChangesAsync();
+                throw new Exception("Room not found");
             }
-            return meeting;
+
+            var newMeeting = request.ToEntityCreateMeeting(organizer, room);
+            
+
+            await _meetingRepository.AddMeetingAsync(newMeeting);
+            
+
+            return newMeeting.ToResponseDTO();
+        }
+
+        public async Task<MeetingResponse> UpdateMeetingAsync(string meetingId, UpdateMeetingRequest request)
+        {
+            var exisingMeeting = await _meetingRepository.GetMeetingByIdAsync(meetingId);
+            if (exisingMeeting == null)
+            {
+                throw new Exception("Meeting not found");
+            }
+
+            var updatedMeeting = request.ToEntityUpdateMeeting(exisingMeeting);
+            await _meetingRepository.UpdateMeetingAsync(updatedMeeting);
+            return updatedMeeting.ToResponseDTO();
+        }
+        public async Task DeleteMeetingAsync(string id)
+        {
+            var existingMeeting = await _meetingRepository.GetMeetingByIdAsync(id);
+            if (existingMeeting == null)
+            {
+                throw new Exception("Meeting not found");
+            }
+            await _meetingRepository.DeleteMeetingAsync(id);
         }
     }
 }

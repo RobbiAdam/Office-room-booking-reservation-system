@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Booking.Client.Migrations
+namespace Booking.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,8 +47,8 @@ namespace Booking.Client.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RoomId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    OrganizerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoomId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,14 +58,43 @@ namespace Booking.Client.Migrations
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Meetings_Users_OrganizerId",
+                        column: x => x.OrganizerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MeetingUser",
+                columns: table => new
+                {
+                    AttendedMeetingsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AttendeesId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeetingUser", x => new { x.AttendedMeetingsId, x.AttendeesId });
+                    table.ForeignKey(
+                        name: "FK_MeetingUser_Meetings_AttendedMeetingsId",
+                        column: x => x.AttendedMeetingsId,
+                        principalTable: "Meetings",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Meetings_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_MeetingUser_Users_AttendeesId",
+                        column: x => x.AttendeesId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meetings_OrganizerId",
+                table: "Meetings",
+                column: "OrganizerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Meetings_RoomId",
@@ -73,14 +102,17 @@ namespace Booking.Client.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Meetings_UserId",
-                table: "Meetings",
-                column: "UserId");
+                name: "IX_MeetingUser_AttendeesId",
+                table: "MeetingUser",
+                column: "AttendeesId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "MeetingUser");
+
             migrationBuilder.DropTable(
                 name: "Meetings");
 

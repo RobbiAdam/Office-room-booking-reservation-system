@@ -8,6 +8,7 @@ namespace Booking.Client.Models
         public string Password { get; set; }
         public string Fullname { get; set; }
 
-        public virtual ICollection<Meeting> Meetings { get; set; } = new List<Meeting>();
+        public virtual IEnumerable<Meeting>? OrganizedMeetings { get; set; } = new List<Meeting>();
+        public virtual IEnumerable<Meeting>? AttendedMeetings{ get; set; } = new List<Meeting>();
     }
 }

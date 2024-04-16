@@ -1,5 +1,6 @@
 ﻿using Booking.Client.Models;
 using Booking.Client.Services.Interfaces;
+using Booking.Server.DTOs.Requests.Meetings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Client.Controllers
@@ -13,21 +14,6 @@ namespace Booking.Client.Controllers
         public MeetingsController(IMeetingService meetingService)
         {
             _meetingService = meetingService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddMeeting(Meeting meeting)
-        {
-            try
-            {
-                var newMeeting = await _meetingService.AddMeetingAsync(meeting);
-                return Ok(newMeeting);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
         }
 
         [HttpGet]
@@ -46,6 +32,49 @@ namespace Booking.Client.Controllers
                 return NotFound();
             }
             return Ok(meeting);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMeeting([FromBody] CreateMeetingRequest meeting)
+        {
+            try
+            {
+                var newMeeting = await _meetingService.AddMeetingAsync(meeting);
+                return CreatedAtAction(nameof(GetMeetingById), new { id = newMeeting.Id }, newMeeting);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMeeting(string id, [FromBody] UpdateMeetingRequest meeting)
+        {
+            try
+            {
+                await _meetingService.UpdateMeetingAsync(id, meeting);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMeeting(string id)
+        {
+            try
+            {
+                await _meetingService.DeleteMeetingAsync(id);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
